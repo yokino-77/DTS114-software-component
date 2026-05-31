@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Football Match Analyst</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f8; color: #202124; }
+    header { background: #0d47a1; color: white; padding: 24px; }
+    main { padding: 24px; max-width: 1000px; margin: auto; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 20px; padding: 20px; }
+    .grid { display: grid; gap: 16px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input { width: 100%; padding: 10px; margin-bottom: 14px; border: 1px solid #cbd5e0; border-radius: 8px; }
+    button { background: #0d47a1; color: white; border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; }
+    button:hover { background: #0b3d91; }
+    pre { background: #f1f5f9; padding: 16px; border-radius: 10px; overflow-x: auto; }
+    .response-section { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Football Match Analyst</h1>
+    <p>A system that generates structured football match reports from basic statistics and key events.</p>
+  </header>
+  <main>
+    <section class="card">
+      <img src="/static/generated_image.png" alt="Generated project illustration" style="max-width:100%; border-radius: 12px;">
+    </section>
+    <section class="card">
+      <h2>Workflow</h2>
+      <ul>
+        <li>Match Input</li>
+        <li>Data Validation</li>
+        <li>AI-style Analysis</li>
+        <li>Report Output</li>
+        <li>Human Review</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Match Input</h2>
+      <form id="analysis-form">
+        <label for="team_a">Team A:</label><input id="team_a" name="team_a" type="text" placeholder="Enter team A" required>
+        <label for="team_b">Team B:</label><input id="team_b" name="team_b" type="text" placeholder="Enter team B" required>
+        <label for="score">Score:</label><input id="score" name="score" type="text" placeholder="Enter score" required>
+        <label for="shots">Shots:</label><input id="shots" name="shots" type="text" placeholder="Enter shots" required>
+        <label for="possession">Possession:</label><input id="possession" name="possession" type="text" placeholder="Enter possession" required>
+        <label for="events">Events:</label><input id="events" name="events" type="text" placeholder="Enter key events" required>
+        <button type="submit">Generate Report</button>
+      </form>
+    </section>
+    <section class="card">
+      <h2>Analysis Result</h2>
+      <div id="result">No report generated yet.</div>
+    </section>
+  </main>
+  <script>
+    function renderObject(obj) {
+      if (typeof obj !== 'object' || obj === null) {
+        return document.createTextNode(String(obj));
+      }
+      const container = document.createElement('div');
+      Object.keys(obj).forEach(key => {
+        const row = document.createElement('div');
+        row.style.marginBottom = '12px';
+        const title = document.createElement('strong');
+        title.textContent = key + ':';
+        row.appendChild(title);
+        const value = obj[key];
+        if (typeof value === 'object' && value !== null) {
+          row.appendChild(renderObject(value));
+        } else {
+          const text = document.createElement('div');
+          text.textContent = String(value);
+          row.appendChild(text);
+        }
+        container.appendChild(row);
+      });
+      return container;
+    }
+    document.getElementById('analysis-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const payload = {
+        team_a: document.getElementById('team_a').value.trim(),
+        team_b: document.getElementById('team_b').value.trim(),
+        score: document.getElementById('score').value.trim(),
+        shots: document.getElementById('shots').value.trim(),
+        possession: document.getElementById('possession').value.trim(),
+        events: document.getElementById('events').value.trim(),
+      };
+      const resultEl = document.getElementById('result');
+      resultEl.textContent = 'Generating report...';
+      const response = await fetch('/api/analyse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        resultEl.textContent = 'Error: ' + (data.error || 'Unknown issue');
+        return;
+      }
+      resultEl.innerHTML = '';
+      resultEl.appendChild(renderObject(data));
+    });
+  </script>
+</body>
+</html>

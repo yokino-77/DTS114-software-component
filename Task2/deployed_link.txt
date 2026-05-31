@@ -1,0 +1,21 @@
+Deployment link:
+[Add your deployed Render/Railway/PythonAnywhere URL here after deployment]
+
+Recommended deployment:
+Render
+
+If deploying Task1/generated_project as the service root:
+Build command:
+pip install -r requirements.txt
+
+Start command:
+gunicorn app:app
+
+If using DeepSeek API on Render:
+Set environment variables in Render dashboard:
+DEEPSEEK_API_KEY
+DEEPSEEK_BASE_URL
+DEEPSEEK_MODEL
+USE_EXTERNAL_AI
+
+The default deployment works without DeepSeek API.

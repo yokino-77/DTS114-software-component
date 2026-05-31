@@ -1,0 +1,28 @@
+@startuml
+title Sequence Diagram - AI Football Match Analyst
+
+actor User
+participant Website
+participant "Flask API" as API
+participant Validation
+participant AIAnalyzer
+participant Report
+participant "Human Review" as Review
+
+User -> Website: Enter match data
+Website -> API: POST /api/analyse
+API -> Validation: Check required fields
+Validation --> API: Validation result
+
+alt valid data
+    API -> AIAnalyzer: Analyse match data
+    AIAnalyzer -> Report: Generate structured report
+    Report --> AIAnalyzer: Report object
+    AIAnalyzer --> API: Analysis result
+    API --> Website: Return JSON report
+    Website -> Review: Display report for human review
+else missing fields
+    API --> Website: Return 400 error
+end
+
+@enduml

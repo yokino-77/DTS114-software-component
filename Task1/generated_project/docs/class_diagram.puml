@@ -1,0 +1,59 @@
+@startuml
+title Class Diagram - AI Football Match Analyst
+
+class Match {
+    +team_a: str
+    +team_b: str
+    +score: str
+    +events: list
+    +validate(): bool
+    +to_dict(): dict
+}
+
+class TeamStats {
+    +shots: str
+    +possession: str
+    +calculate_attack(): str
+    +identify_risks(): str
+}
+
+class Event {
+    +minute: int
+    +team: str
+    +type: str
+    +description: str
+    +summarise(): str
+}
+
+class AIAnalyzer {
+    +input_data: dict
+    +use_external_ai: bool
+    +analyse_match(): Report
+    +fallback_analysis(): Report
+    +call_deepseek(): str
+}
+
+class Report {
+    +match_summary: str
+    +strengths: str
+    +risks: str
+    +recommendations: str
+    +human_review_note: str
+    +format_json(): dict
+}
+
+class FlaskAPI {
+    +GET_index()
+    +GET_sample_report()
+    +POST_analyse()
+    +validate_request(): bool
+}
+
+Match "1" o-- "1" TeamStats
+Match "1" o-- "*" Event
+AIAnalyzer --> Match
+AIAnalyzer --> Report
+FlaskAPI --> AIAnalyzer
+FlaskAPI --> Report
+
+@enduml

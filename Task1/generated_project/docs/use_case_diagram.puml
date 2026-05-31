@@ -1,0 +1,29 @@
+@startuml
+title Use Case Diagram - AI Football Match Analyst
+left to right direction
+
+actor Coach
+actor "Match Analyst" as Analyst
+actor "System Reviewer" as Reviewer
+
+rectangle "AI Football Match Analyst" {
+    usecase "Submit match data" as UC1
+    usecase "Validate match data" as UC2
+    usecase "Generate AI-style analysis" as UC3
+    usecase "Review generated report" as UC4
+    usecase "View report" as UC5
+}
+
+Coach --> UC1
+Coach --> UC5
+Analyst --> UC1
+Analyst --> UC3
+Analyst --> UC5
+Reviewer --> UC4
+
+UC1 --> UC2
+UC2 --> UC3
+UC3 --> UC4
+UC4 --> UC5
+
+@enduml
